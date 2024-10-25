@@ -1,0 +1,15 @@
+public class OpportunityOverlap {
+    public static Boolean checkOpportunityOverlap(Id propertyId, Date startDate, Date endDate) {
+        // Query existing opportunities that overlap with the given dates for the same property
+        List<Opportunityyy__c> existingOpps = [
+            SELECT Id 
+            FROM Opportunityyy__c 
+            WHERE Property__c = :propertyId 
+            AND (Start_Date__c <= :endDate AND End_Date__c >= :startDate) 
+            AND Status__c = 'Closed Won'
+        ];
+        
+        // Return true if there are overlapping opportunities
+        return !existingOpps.isEmpty();
+    }
+}
