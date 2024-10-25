@@ -1,0 +1,9 @@
+trigger OpportunityOverlapTrigger on Opportunityyy__c (before insert, before update) {
+    for (Opportunityyy__c opp : Trigger.new) {
+        if (opp.Start_Date__c != null && opp.End_Date__c != null) {
+            if (OpportunityOverlap.checkOpportunityOverlap(opp.Property__c, opp.Start_Date__c, opp.End_Date__c)) {
+                opp.addError('This property has an overlapping opportunity.');
+            }
+        }
+    }
+}
