@@ -1,0 +1,32 @@
+public class InvoiceGenerationBatch implements Database.Batchable<SObject> {
+    // Step 1: Define the start method
+    public Database.QueryLocator start(Database.BatchableContext BC) {
+        // Query the records you want to process
+        return Database.getQueryLocator([SELECT Id FROM Invoicee__c WHERE Status__c = 'Pending']);
+    }
+
+    // Step 2: Define the execute method
+    public void execute(Database.BatchableContext BC, List<SObject> scope) {
+        // Cast the List<SObject> to List<Invoice__c>
+        List<Invoicee__c> invoicesToUpdate = new List<Invoicee__c>();
+        List<Invoicee__c> invoices = (List<Invoicee__c>)scope; // Cast here
+
+        // Loop through the records and generate invoices
+        for (Invoicee__c invoice : invoices) {
+            // Generate the invoice (this is a placeholder)
+            invoice.Status__c = 'Generated';
+            invoicesToUpdate.add(invoice);
+        }
+
+        // Step 3: Update the records in the database
+        if (!invoicesToUpdate.isEmpty()) {
+            update invoicesToUpdate;
+        }
+    }
+
+    // Step 4: Define the finish method
+    public void finish(Database.BatchableContext BC) {
+        // Any post-processing logic, like sending notifications
+        System.debug('Batch process completed successfully.');
+    }
+}
