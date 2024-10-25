@@ -1,0 +1,22 @@
+@isTest
+public class InvoiceGenerationBatchTest {
+    @isTest
+    static void testBatchProcess() {
+        // Step 1: Create test data with existing picklist value
+        List<Invoicee__c> testInvoices = new List<Invoicee__c>();
+        for (Integer i = 0; i < 10; i++) {
+            testInvoices.add(new Invoicee__c(Status__c = 'Pending')); // Ensure this value exists
+        }
+        insert testInvoices;
+
+        // Step 2: Execute the batch
+        Test.startTest();
+        InvoiceGenerationBatch batch = new InvoiceGenerationBatch();
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        // Step 3: Verify results using the correct picklist value
+        List<Invoicee__c> updatedInvoices = [SELECT Status__c FROM Invoicee__c WHERE Status__c = 'Generated'];
+        System.assertEquals(10, updatedInvoices.size(), 'All invoices should be generated.');
+    }
+}
